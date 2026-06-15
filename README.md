@@ -25,7 +25,8 @@ This workshop guides you through building a production-ready full-stack applicat
 | **Runtime** | Node.js | 24.13.0 |
 | **Package Manager** | npm | 11.6.2+ |
 | **Authentication** | OAuth 2.0 | Google & GitHub |
-| **Containerization** | Docker | 4.77.0+ |
+| **Local Supabase** | Docker | 4.77.0+ (Optional) |
+| **Deployment** | Vercel | Latest |
 | **Version Control** | Git | Latest |
 
 ---
@@ -34,14 +35,21 @@ This workshop guides you through building a production-ready full-stack applicat
 
 Before starting, ensure you have installed:
 
+### Required
+
 1. **Node.js** (v24.13.0+) - [Download](https://nodejs.org/)
 2. **npm** (v11.6.2+) - Comes with Node.js
 3. **Angular CLI** (v21.x) - Global installation
 4. **Git** - [Download](https://git-scm.com/)
-5. **GitHub Desktop** (Optional) - [Download](https://desktop.github.com/)
-6. **Docker Desktop** (Optional) - [Download](https://www.docker.com/products/docker-desktop)
-7. **Visual Studio Code** - [Download](https://code.visualstudio.com/)
-8. **WSL 2** (Windows users) - [Installation Guide](https://learn.microsoft.com/en-us/windows/wsl/install)
+5. **Visual Studio Code** - [Download](https://code.visualstudio.com/)
+6. **WSL 2** (Windows users) - [Installation Guide](https://learn.microsoft.com/en-us/windows/wsl/install)
+
+### Optional (for Local Development)
+
+7. **GitHub Desktop** - [Download](https://desktop.github.com/)
+8. **Docker Desktop** (v4.77.0+) - [Download](https://www.docker.com/products/docker-desktop)
+   - Used to run **Supabase locally** with PostgreSQL
+   - Alternative: Use the cloud-hosted Supabase project
 
 ### Verify Installation
 
@@ -281,7 +289,144 @@ This creates an optimized production build in the `dist/` directory.
 
 ---
 
-## 📁 Project Structure
+## � Deployment on Vercel
+
+Vercel is the recommended platform for deploying your Angular 21 application with built-in support for Server-Side Rendering (SSR) and optimal performance.
+
+### Prerequisites for Deployment
+
+- GitHub account with your repository pushed
+- Vercel account ([Sign up free](https://vercel.com/signup))
+- Supabase project URL and API keys
+
+### Step 1: Push Your Code to GitHub
+
+```powershell
+git init
+git add .
+git commit -m "Initial commit: Angular 21 + Supabase app"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/iet-se-workshop.git
+git push -u origin main
+```
+
+### Step 2: Connect GitHub to Vercel
+
+1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
+2. Click **"Add New..."** → **"Project"**
+3. Select **"Import Git Repository"**
+4. Search for and select your repository: `iet-se-workshop`
+5. Click **"Import"**
+
+### Step 3: Configure Environment Variables
+
+In the Vercel project settings:
+
+1. Click **"Settings"** → **"Environment Variables"**
+2. Add the following variables:
+
+```
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+> Get these values from **Supabase Console > Project Settings > API**
+
+### Step 4: Configure Build Settings (if needed)
+
+Vercel usually auto-detects Angular projects. Verify:
+
+- **Framework**: Angular
+- **Build Command**: `npm run build`
+- **Output Directory**: `dist/angular-supabase-app/browser`
+- **Install Command**: `npm install`
+
+### Step 5: Deploy
+
+1. Click **"Deploy"**
+2. Wait for the build to complete (usually 2-3 minutes)
+3. Your app will be live at `https://your-project.vercel.app`
+
+### Post-Deployment Steps
+
+1. **Update OAuth Redirect URIs** in Supabase:
+   - Go to **Authentication > Providers > OAuth**
+   - For Google: Update redirect URIs to include `https://your-project.vercel.app/auth/callback`
+   - For GitHub: Update Authorization callback URL
+
+2. **Monitor Your Deployment**:
+   - View logs: **Deployments** tab
+   - Check performance: **Analytics** tab
+   - Monitor errors: **Monitoring** tab
+
+### Continuous Deployment
+
+Once connected:
+- Every `git push` to `main` triggers automatic deployment
+- Preview deployments for pull requests
+- Automatic rollback if build fails
+
+### Useful Vercel Commands
+
+```powershell
+# Install Vercel CLI
+npm install -g vercel
+
+# Deploy from terminal
+vercel
+
+# Deploy to production
+vercel --prod
+
+# View logs
+vercel logs
+```
+
+---
+
+## 🐳 Running Supabase Locally with Docker (Optional)
+
+If you prefer to run Supabase locally instead of using the cloud-hosted version:
+
+### Step 1: Install Docker Desktop
+
+Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop)
+
+### Step 2: Start Supabase Locally
+
+```powershell
+cd supabase
+supabase start
+```
+
+This will:
+- Start PostgreSQL database
+- Start Supabase API server
+- Display local connection credentials
+
+### Step 3: Update Environment Variables
+
+Update `src/environments/environment.ts`:
+
+```typescript
+export const environment = {
+  production: false,
+  supabase: {
+    url: 'http://localhost:54321',  // Local Supabase URL
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'  // From supabase start output
+  }
+};
+```
+
+### Step 4: Stop Supabase
+
+```powershell
+supabase stop
+```
+
+---
+
+## �📁 Project Structure
 
 ```
 angular-supabase-app/
@@ -317,7 +462,7 @@ angular-supabase-app/
 
 ## 🎓 Workshop Features to Implement
 
-### Phase 1: Foundation (Week 1-2)
+### Phase 1: Foundation (Day 1)
 - [ ] Set up Angular 21 project with SSR
 - [ ] Configure Angular Material theming
 - [ ] Create responsive landing page layout
@@ -340,7 +485,7 @@ angular-supabase-app/
 - [ ] Add error handling and user feedback
 - [ ] Implement loading states and animations
 - [ ] Write unit and integration tests
-- [ ] Deploy to production (Vercel, Netlify, or Cloud Run)
+- [ ] Deploy to production on Vercel
 
 ---
 
