@@ -243,6 +243,51 @@ export const environment = {
 
 ---
 
+## Frontend Setup 
+```powershell
+ng g c shared/components/landing
+ng g interface shared/models/landing/landing.constants
+ng g interface shared/models/landing/landing.models   
+```
+```powershell
+ng g service core/services/db/supabase  
+ng g service core/services/auth/auth  
+```
+```powershell
+ng g guard core/guards/auth.guard
+✔ Which type of guard would you like to create? CanActivate
+```
+```powershell
+ng g interceptor core/interceptors/ux/loading
+ng g interceptor core/interceptors/ux/contenttype 
+ng g interceptor core/interceptors/auth/authtoken  
+ng g interceptor core/interceptors/auth/refreshtoken
+ng g interceptor core/interceptors/reliability/retry       
+ng g interceptor core/interceptors/reliability/cache
+ng g interceptor core/interceptors/dev/error        
+ng g interceptor core/interceptors/dev/logging
+```
+```powershell
+ng g module modules/auth --routing
+ng g module modules/admin --routing
+ng g module modules/user --routing 
+```
+```powershell
+ng g c modules/admin/components/admin-navbar
+ng g c modules/admin/components/admin-footer-nav
+ng g c modules/admin/components/admin-layout 
+ng g c modules/admin/components/admin-dashboard   
+ng g c modules/auth/components/login
+ng g c modules/auth/components/signup
+ng g c modules/auth/components/auth-callback
+ng g c modules/auth/components/forgot-password
+ng g c modules/user/components/user-navbar 
+ng g c modules/user/components/user-footer-nav  
+ng g c modules/user/components/user-layout     
+ng g c modules/user/components/user-dashboard
+```
+---
+
 ## 🚀 Running the Application
 
 ### Development Server
